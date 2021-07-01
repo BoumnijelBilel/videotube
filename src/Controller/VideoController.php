@@ -15,7 +15,9 @@ class VideoController extends AbstractController
      */
     public function index(Video $video, VideoRepository $videoRepository): Response
     {
-        $videos = $videoRepository->findBy([], [
+        $videos = $videoRepository->findBy([
+            'owner' => $video->getOwner(),
+        ], [
             'publishedAt' => 'DESC',
         ], 12);
 

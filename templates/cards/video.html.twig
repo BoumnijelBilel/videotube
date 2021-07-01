@@ -1,6 +1,9 @@
 <div class="card h-100">
     <div class="card-body d-flex flex-column">
         <h2 class="card-title">{{ video.title }}</h2>
+        <div>
+            {{ video.owner.lastName }} {{ video.owner.firstName }}
+        </div>
         {% if video.description is not empty %}
             <p class="card-text">
                 {{ video.description }}
