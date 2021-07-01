@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\VideoRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -28,11 +30,6 @@ class Video
     private $description;
 
     /**
-     * @ORM\Column(type="integer")
-     */
-    private $likeCounter;
-
-    /**
      * @ORM\Column(type="datetime")
      */
     private $publishedAt;
@@ -47,6 +44,16 @@ class Video
      * @ORM\JoinColumn(nullable=false)
      */
     private $owner;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=User::class, inversedBy="likedVideos")
+     */
+    private $userLikes;
+
+    public function __construct()
+    {
+        $this->userLikes = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -77,16 +84,9 @@ class Video
         return $this;
     }
 
-    public function getLikeCounter(): ?int
+    public function getLikeCounter(): int
     {
-        return $this->likeCounter;
-    }
-
-    public function setLikeCounter(int $likeCounter): self
-    {
-        $this->likeCounter = $likeCounter;
-
-        return $this;
+        return $this->userLikes->count();
     }
 
     public function getPublishedAt(): ?\DateTimeInterface
@@ -121,6 +121,30 @@ class Video
     public function setOwner(?User $owner): self
     {
         $this->owner = $owner;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|User[]
+     */
+    public function getUserLikes(): Collection
+    {
+        return $this->userLikes;
+    }
+
+    public function addUserLike(User $userLike): self
+    {
+        if (!$this->userLikes->contains($userLike)) {
+            $this->userLikes[] = $userLike;
+        }
+
+        return $this;
+    }
+
+    public function removeUserLike(User $userLike): self
+    {
+        $this->userLikes->removeElement($userLike);
 
         return $this;
     }

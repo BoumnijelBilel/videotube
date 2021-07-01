@@ -19,7 +19,7 @@ class VideoController extends AbstractController
             'owner' => $video->getOwner(),
         ], [
             'publishedAt' => 'DESC',
-        ], 12);
+        ], 8);
 
         return $this->render('video/index.html.twig', [
             'video' => $video,
